@@ -1,22 +1,9 @@
-/**
-* wx.css
-*
-* 框架里所需要使用的css样式
-*
-* @author xuyong <xuyong@ninetowns.com>
-* @createTime 2015-04-01
-* @projectHome https://github.com/ninetowns/jsframework
-*
-* Released under the MIT license:
-*   http://www.opensource.org/licenses/mit-license.php
-*/
-
-/*
-    弹框
-*/
-.pop-bg {background: url(../images/common/bg-pop.png); left: 0; position: absolute; top: 0; z-index: 20; } 
-.pop-container{position: absolute; z-index:21;}
 .ui-dialog {*zoom:1; _float: left; position: relative; background-color: #FFF; border: 1px solid #999; border-radius: 6px; outline: 0; font-size: 14px; color: #333; width:300px; }
+.ui-dialog-bg {background-color: #000; opacity: .2; left: 0; position: absolute; top: 0; transition: all 0.3s;}
+.ui-dialog-bg.show{opacity: .5;}
+.ui-dialog-container{position: absolute; top:30%;left:50%;opacity: .5; transition-duration: 0.3s;transition-property:opacity,top;}
+.ui-dialog-container.show{top:40%;opacity: 1;}
+.ui-dialog-container.move{margin-left: 0 !important;margin-top: 0 !important; transition: none;}
 .ui-dialog-title {margin: 0; line-height: 1.428571429; min-height: 16.428571429px; padding: 15px; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold; }
 .ui-dialog-header {white-space: nowrap; border-bottom: 1px solid #E5E5E5; }
 .ui-dialog-body {padding: 20px; text-align: center; }

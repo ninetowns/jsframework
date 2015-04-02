@@ -22,7 +22,6 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
       singleError : $form.attr(prefix+'-single-error')||false,
       subConfirm  : this.$submitBn.attr(prefix+'-confirm'),
       enterSubmit : typeof $form.attr(prefix+'-entersubmit')=='string'?0:1,
-      autoComp    : typeof $form.attr(prefix+'-autocomplete')=='string'?0:1,
       noScroll    : typeof $form.attr(prefix+'-notscrolltoerror')=='string'?0:1
     };
     this.init();

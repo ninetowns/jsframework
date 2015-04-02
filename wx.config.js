@@ -78,41 +78,33 @@
     </table>',
 
     //弹出框alert结构
-    // alert: '<table class="ui-dialog">\
-    //   <tbody>\
-    //     <tr class="Js-drag">\
-    //       <td class="ui-dialog-header">\
-    //         <%if(!noBtn){%>\
-    //           <button class="ui-dialog-close Js-dialog-close" title="取消">×</button>\
-    //         <%}%>\
-    //         <div class="ui-dialog-title"><%title||"提示"%></div>\
-    //       </td>\
-    //     </tr>\
-    //     <tr>\
-    //       <td class="ui-dialog-body">\
-    //         <div class="ui-dialog-content"><%content%></div>\
-    //       </td>\
-    //     </tr>\
-    //     <tr>\
-    //       <td class="ui-dialog-footer">\
-    //         <div class="ui-dialog-button">\
-    //         <%if(!noBtn){%>\
-    //           <button class="ui-dialog-autofocus Js-dialog-close" type="button"><%okText||"确 定"%></button>\
-    //         <%}%>\
-    //         </div>\
-    //       </td>\
-    //     </tr>\
-    //   </tbody>\
-    // </table>',
-
-    alert:'<div class="ui-dialog">\
-            <div class="ui-dialog-slide"></div>\
-            <div class="ui-dialog-content">\
-              <p><%content%></p>\
-              <a href="javascript:;" class="ui-dialog-close Js-dialog-close">关闭</a>\
-              <div class="ui-dialog-btn Js-dialog-close">关闭</div>\
+    alert: '<table class="ui-dialog">\
+      <tbody>\
+        <tr class="Js-drag">\
+          <td class="ui-dialog-header">\
+            <%if(!noBtn){%>\
+              <button class="ui-dialog-close Js-dialog-close" title="取消">×</button>\
+            <%}%>\
+            <div class="ui-dialog-title"><%title||"提示"%></div>\
+          </td>\
+        </tr>\
+        <tr>\
+          <td class="ui-dialog-body">\
+            <div class="ui-dialog-content"><%content%></div>\
+          </td>\
+        </tr>\
+        <tr>\
+          <td class="ui-dialog-footer">\
+            <div class="ui-dialog-button">\
+            <%if(!noBtn){%>\
+              <button class="ui-dialog-autofocus Js-dialog-close" type="button"><%okText||"确 定"%></button>\
+            <%}%>\
             </div>\
-    </div>',
+          </td>\
+        </tr>\
+      </tbody>\
+    </table>',
+
 
     //弹出框confirm结构
     confirm: '<table class="ui-dialog">\
@@ -154,51 +146,5 @@
       return new Function('data','return data.'+config.dataInfo)(data);
    }
 
-  if(window.location.href.indexOf('test3') >= 0){
-      config.url={
-        web    : "http://test3.tootoo.cn/",
-        web_en : "http://en.test3.tootoo.cn/",
-        pay    : "http://pay.test3.tootoo.cn/",
-        img    : "http://img.test3.tootoo.cn/",
-        js     : "http://js.test3.tootoo.cn/",
-        res    : "http://res.test3.tootoo.cn/",
-        user   : "http://user.test3.tootoo.cn/",
-        shop   : "http://shop.test3.tootoo.cn/",
-        api    : 'http://sapi.test.tootoo.cn/',
-        api_s  : 'https://portal.tootoo.cn/sapi/test/',
-        user_s : 'https://portal.tootoo.cn/user/v3beta/',
-        pay_s  : 'https://portal.tootoo.cn/pay/v3beta/'
-      };
-  } else if(window.location.href.indexOf('v3beta') >= 0){
-      config.url={
-        web     : "http://v3beta.tootoo.cn/",
-        web_en  : "http://en.v3beta.tootoo.cn/",
-        pay     : "http://pay.v3beta.tootoo.cn/",
-        img     : "http://img.v3beta.tootoo.cn/",
-        js      : "http://js.v3beta.tootoo.cn/",
-        res     : "http://res.v3beta.tootoo.cn/",
-        user    : "http://user.v3beta.tootoo.cn/",
-        shop    : "http://shop.v3beta.tootoo.cn/",
-        api     : 'http://sapi.beta.tootoo.cn/',
-        api_s   : 'http://sapi.beta.tootoo.cn/',
-        user_s  : 'https://portal.tootoo.cn/user/v3beta/',
-        pay_s   : 'https://portal.tootoo.cn/pay/v3beta/'
-      };
-  } else {
-      config.url={
-        web     : "http://www.tootoo.cn/",
-        web_en  : "http://en.tootoo.cn/",
-        pay     : "http://pay.tootoo.cn/",
-        img     : "http://misc.ttmimg.com/",
-        js      : "http://js.ttmimg.com/",
-        res     : "http://res.ttmimg.com/",
-        user    : "http://user.tootoo.cn/",
-        shop    : "http://shop.tootoo.cn/",
-        api     : 'http://sapi.tootoo.cn/',
-        api_s   : 'http://sapi.tootoo.cn/',
-        user_s  : 'http://user.tootoo.cn/',
-        pay_s   : 'http://pay.tootoo.cn/'
-      };
-  }
   return config;
  });

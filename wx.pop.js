@@ -142,6 +142,9 @@ define(['wx.tpl','wx.config'],function(wx,config){
     this.drag();
   }
 
+  wx.loading = function(setting){
+    return new Dialog('',config.loading,setting);
+  }
 
   wx.alert = function(content,setting){
     return new Dialog(content,config.alert,setting);
@@ -149,7 +152,6 @@ define(['wx.tpl','wx.config'],function(wx,config){
 
   wx.confirm = function(content,setting){
     var confirm = new Dialog(content,config.confirm,setting);
-    console.log(confirm)
     confirm.bindEvent('click','#Js-dialog-confirm',function(){
       if($.isFunction(setting.fn))
         setting.fn.call(setting.context||this);

@@ -28,9 +28,6 @@ define(['wx','wx.config'],function(wx,config){
         };
         options.url      += options.url.indexOf("?") !== -1 ? "&_="+new Date().getTime() : "?_="+new Date().getTime();
         options.size     = options.size ? parseFloat(options.size)*1024*1024 : null;
-        options.callback = $.isFunction(window[options.name]) ? window[options.name] : null;
-        options.before   = $.isFunction(window[options.name+"_before"]) ? window[options.name+"_before"] : null;
-        options.progress = $.isFunction(window[options.name+"_progress"]) ? window[options.name+"_progress"] : null;
         options.mult ? $elem.attr("multiple",true) : null;
         $elem.data("opt",options);
         $elem.attr('hidefocus','true');
@@ -38,10 +35,8 @@ define(['wx','wx.config'],function(wx,config){
     }
 
     function before(options,$input) {
-        var result = true;
-        if(options.before)
-            result = options.before($input);
-        if(result && options.loading)
+        var result = $input.triggerHandler('upload:before');
+        if((result || typeof result === 'undefined') && options.loading)
             wx.loading("正在上传...");
         return result;
     }
@@ -81,8 +76,7 @@ define(['wx','wx.config'],function(wx,config){
                 }
                 if(options.loading)
                     wx.popClose();
-                if(options.callback)
-                    options.callback(data,$input);
+                $input.triggerHandler('upload',data);
             } else {
                 wx.alert(data[config.dataInfo]);
             }
@@ -130,15 +124,13 @@ define(['wx','wx.config'],function(wx,config){
         }
 
         function bindEvent(xhr){
-            if(options.progress){
-                xhr.upload.addEventListener("progress", function(evt){
-                    if (evt.lengthComputable) {
-                      options.progress(Math.round(evt.loaded * 100 / evt.total).toString(),$input);
-                    } else {
-                      wx.log('unable to compute');
-                    }
-                }, false);
-            }
+            xhr.upload.addEventListener("progress", function(evt){
+                if (evt.lengthComputable) {
+                    $input.triggerHandler('upload:progress',Math.round(evt.loaded * 100 / evt.total).toString());
+                } else {
+                    wx.log('unable to compute');
+                }
+            }, false);
             xhr.addEventListener("load", function(evt){complete(evt.target.responseText,options,$input);}, false);
             xhr.addEventListener("error", function(error){complete('{"status:0",error:"'+error+'"}',options,$input);}, false);
         }
