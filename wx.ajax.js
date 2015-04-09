@@ -35,10 +35,7 @@ define(['wx','wx.config'],function(wx,config){
 	}
 
 	Ajax.prototype.before = function(xhr,params){
-		var currentUrl;
-		if(params.data){
-			currentUrl = params.url+params.data;
-		}
+		var currentUrl = params.url+params.data || '';
 		if(currentUrl === Ajax.lastUrl && this.setting.throttle){
 			Ajax.throttle();
 			return false;

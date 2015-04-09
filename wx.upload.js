@@ -36,9 +36,12 @@ define(['wx','wx.config'],function(wx,config){
 
     function before(options,$input) {
         var result = $input.triggerHandler('upload:before');
-        if((result || typeof result === 'undefined') && options.loading)
-            wx.loading("正在上传...");
-        return result;
+        if(result || typeof result === 'undefined'){
+            if(options.loading)
+                wx.loading("正在上传...");
+            return true;
+        }
+        return false;
     }
 
     function complete(responseText, options, $input) {
