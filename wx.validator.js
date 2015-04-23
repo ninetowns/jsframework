@@ -125,7 +125,7 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
   }
 
   WxForm.prototype.resetSingleError = function(){
-    $(this.setting.singleError).text('').hide();
+    $(this.setting.singleError).text('');
   }
 
   WxForm.prototype.singleError = function(errText){
