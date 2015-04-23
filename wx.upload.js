@@ -1,4 +1,4 @@
-define(['wx','wx.config'],function(wx,config){
+define(['wx','wx.config','wx.pop'],function(wx,config){
     var W3C    = window.FormData !== undefined ? true : false,
         prefix = "wx-upload";
 
@@ -47,7 +47,7 @@ define(['wx','wx.config'],function(wx,config){
     function complete(responseText, options, $input) {
         try{
             var data = $.parseJSON(responseText);
-            if(data[config.dataFlag] == config.dataSuccessVal){
+            if(config.getStatus(data) == config.dataSuccessVal){
                 if(options.assign){
                     var assign = options.assign.split("&");
                     for(var i = 0; i<assign.length; i++){
@@ -84,7 +84,7 @@ define(['wx','wx.config'],function(wx,config){
                 wx.alert(data[config.dataInfo]);
             }
         }
-        catch(e){wx.log("uploadComplete error "+e);}
+        catch(e){console.log("uploadComplete error ",e);}
     }
 
     function h5() {
@@ -131,7 +131,7 @@ define(['wx','wx.config'],function(wx,config){
                 if (evt.lengthComputable) {
                     $input.triggerHandler('upload:progress',Math.round(evt.loaded * 100 / evt.total).toString());
                 } else {
-                    wx.log('unable to compute');
+                    console.log('unable to compute');
                 }
             }, false);
             xhr.addEventListener("load", function(evt){complete(evt.target.responseText,options,$input);}, false);

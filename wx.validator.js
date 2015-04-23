@@ -22,6 +22,7 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
       singleError : $form.attr(prefix+'-single-error')||false,
       subConfirm  : this.$submitBn.attr(prefix+'-confirm'),
       enterSubmit : typeof $form.attr(prefix+'-entersubmit')=='string'?0:1,
+      autoComp    : typeof $form.attr(prefix+'-autocomplete')=='string'?0:1,
       noScroll    : typeof $form.attr(prefix+'-notscrolltoerror')=='string'?0:1
     };
     this.init();
@@ -77,12 +78,12 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
       event.preventDefault();
     var errorEle = null;
     for(var i=0;i<this.wxElements.length;i++){
-      if(!this.wxElements[i].isValid){
-        this.wxElements[i].valid();
+      if(!this.wxElements[i].isValid && !this.wxElements[i].valid()){
         errorEle = this.wxElements[i];
         break;
       }
     }
+
     if(errorEle){
       if(!this.setting.noScroll){
         var errorEleTop = errorEle.$ele.offset().top - errorEle.$ele.height();
@@ -124,11 +125,11 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
   }
 
   WxForm.prototype.resetSingleError = function(){
-    $(this.setting.singleError).text('');
+    $(this.setting.singleError).text('').hide();
   }
 
   WxForm.prototype.singleError = function(errText){
-    $(this.setting.singleError).text(errText);
+    $(this.setting.singleError).text(errText).show();
   }
 
 
@@ -161,6 +162,7 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
         this.showSuccess(text);
     else
         this.showError(errorRule,text);
+
     return isValid;
   }
 
@@ -189,7 +191,7 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
     if(this.wxform.setting.singleError){
       this.wxform.singleError(info||errText);
     } else if(this.setting.ae.length){
-      this.setting.ae.show().text(info);
+      this.setting.ae.show().text(info||errText);
     } else if($(this.setting.na+errorRule[0]).length){
         $(this.setting.na+errorRule[0]).show().text(info);
     } else {
@@ -218,27 +220,19 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
   }
 
   Input.prototype.placeholder = function(){
-    var $thisInp = this.$ele;
+    var $thisInp = this.$ele,ph = this.setting.ph;
     if('placeholder' in $thisInp[0]){
       $thisInp.attr('placeholder',this.setting.ph);
       $thisInp.next('.wx-placeholder').remove();
     } else {
-      var $inputNotice = $thisInp.next('.wx-placeholder').length ?
-                         $thisInp.next('.wx-placeholder') :
-                         $('<span class="wx-placeholder" style="position:absolute;top:'+$thisInp.position().top+'px;left:'+($thisInp.position().left+3)+'px">'+this.setting.ph+'</span>');
-      $inputNotice.click(function(){
-        $thisInp.focus();
-      })
-      $thisInp.after($inputNotice);
-      if($thisInp.val().length)
-        $inputNotice.hide();
-      else
-        $inputNotice.show();
-      $thisInp.bind('propertychange input blur',function(){
-        if($thisInp.val().length)
-          $inputNotice.hide();
-        else
-          $inputNotice.show();
+      $thisInp.val(ph).addClass('wx-placeholder');
+      $thisInp.click(function(){
+        if($(this).val() == ph)
+          $thisInp.val('').removeClass('wx-placeholder');
+      }).blur(function(){
+        if(wx.trim($(this).val()).length === 0){
+          $thisInp.val(ph).addClass('wx-placeholder');
+        }
       });
     }
   }
@@ -248,7 +242,8 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
     var isAllRight = true,notValidRule,validItem;
     for(var i=0,l=rules.length;i<l;i++){
         var r = rules[i].split(','),
-            validItem = wx.validator.rule[r[0]](this.$ele.val(),r[1],this);
+            value = wx.trim(this.$ele.val()),
+            validItem = wx.validator.rule[r[0]]( value == this.setting.ph?'':value,r[1],this);
         if(r[0].length && !validItem){
             isAllRight = false;
             notValidRule = rules[i];
@@ -288,7 +283,10 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
   Checkbox.prototype = new Element;
 
   Checkbox.prototype.init = function(){
-    this.$ele.change($.proxy(this.valid,this));
+    var checkbox = this;
+    this.$ele.click(function(){
+      checkbox.valid.call(checkbox);
+    });
   }
   Checkbox.prototype.valid = function(){
     return this.getValid(this.$ele.is(':checked'),'required');
@@ -395,6 +393,9 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
     regExp: function(value,reg) {
       return new RegExp(reg).test(value);
     },
+    empty: function() {
+      return true;
+    },
     basic:function(value){
       return !/select|update|delete|truncate|join|union|exec|insert|drop|count|'|"|;|>|<|%/i.test(value);
     }
@@ -403,7 +404,7 @@ define(['wx','wx.config','wx.ajax','wx.pop'],function(wx,config){
   var checkAjaxData_thr = wx.throttle(checkAjaxData,500);
   function checkAjaxData (value,url,inp) {
       var urlParam = url.split('@');
-      wx.sendData(urlParam[1],{data:urlParam[0]+'='+value,'throttle':false,'dataType':'jsonp','type':'get'},function(data){
+      wx.sendData(urlParam[1],{data:urlParam[0]+'='+encodeURIComponent(value),'throttle':false,'dataType':'jsonp','type':'get'},function(data){
           inp.getValid(config.getStatus(data) == config.dataSuccessVal,'ajax',config.getInfo(data));
       });
   }
